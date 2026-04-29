@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Horizon Labs - Computer Networking V-Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .nav-links a {
+      margin-left: 25px;
+      text-decoration: none;
+      color: #334155;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #2563eb;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 90px 20px;
+    }
+
+    .hero h1 {
+      font-size: 44px;
+      color: #1e293b;
+    }
+
+    .hero p {
+      margin-top: 12px;
+      font-size: 18px;
+      color: #64748b;
+    }
+
+    .hero a {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 26px;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .hero a:hover {
+      background: #1d4ed8;
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 20px;
+      padding: 40px 50px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+      color: #2563eb;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    /* LABS */
+    .labs {
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .labs h2 {
+      font-size: 30px;
+      margin-bottom: 25px;
+      color: #1e293b;
+    }
+
+    .lab-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .lab-btn {
+      padding: 12px 22px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid #2563eb;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .lab-btn:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="logo">Horizon Labs</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Labs</a>
+      <a href="#">Simulator</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Computer Networking Virtual Lab</h1>
+    <p>Learn, Simulate, and Master Networking Concepts in Real-Time</p>
+
+    <a href="dijkstra.html">Launch Dijkstra Simulator</a>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="card">
+      <h3>Interactive Labs</h3>
+      <p>Perform real-world networking experiments with simulations.</p>
+    </div>
+
+    <div class="card">
+      <h3>Visual Algorithms</h3>
+      <p>Understand routing algorithms like Dijkstra with visual tools.</p>
+    </div>
+
+    <div class="card">
+      <h3>Real-Time Testing</h3>
+      <p>Test your knowledge with instant feedback and analysis.</p>
+    </div>
+
+    <div class="card">
+      <h3>Modern UI</h3>
+      <p>Clean and responsive design for better learning experience.</p>
+    </div>
+  </section>
+
+  <!-- LABS -->
+  <section class="labs">
+    <h2>Available Labs</h2>
+
+    <div class="lab-list">
+      <a class="lab-btn" href="#">OSI Model Simulator</a>
+      <a class="lab-btn" href="dijkstra.html">Dijkstra Algorithm</a>
+      <a class="lab-btn" href="#">Subnet Calculator</a>
+      <a class="lab-btn" href="#">Routing Simulator</a>
+      <a class="lab-btn" href="#">Packet Flow Visualizer</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    © 2026 Horizon Labs | Computer Networking V-Lab
+  </div>
+
+</body>
+</html>

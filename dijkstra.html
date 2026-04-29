@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dijkstra Ultimate Tool</title>
+  <style>
+    <style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+  background:#f1f5f9;
+  color:#1e293b;
+}
+
+/* NAVBAR */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background:white;
+  border-bottom:1px solid #e2e8f0;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  color:#2563eb;
+}
+
+.nav-links span{
+  margin:0 12px;
+  cursor:pointer;
+  color:#334155;
+}
+
+/* LAYOUT */
+.container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+/* PANEL */
+.panel{
+  width:260px;
+  background:white;
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.panel h3{
+  margin-bottom:10px;
+  color:#2563eb;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+/* INPUTS */
+select, input{
+  width:100%;
+  padding:8px;
+  margin:6px 0;
+  border-radius:6px;
+  border:1px solid #cbd5e1;
+  background:white;
+  color:#1e293b;
+}
+
+/* WORKSPACE */
+.workspace{
+  flex:1;
+  background:white;
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+canvas{
+  background:#f8fafc;
+  border-radius:10px;
+  border:1px solid #e2e8f0;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  margin-top:15px;
+  border-collapse:collapse;
+}
+
+td, th{
+  padding:8px;
+  text-align:center;
+}
+
+tr{
+  border-bottom:1px solid #e2e8f0;
+}
+
+.circle{
+  border:2px solid #22c55e;
+  border-radius:50%;
+  padding:4px 8px;
+  display:inline-block;
+}
+
+/* SEQUENCE */
+#sequence{
+  margin-top:10px;
+  color:#2563eb;
+  font-size:14px;
+}
+</style>
+  </style>
+</head>
+<body>
+
+<h2>Dijkstra Visualizer (Ultimate Final)</h2>
+<div class="navbar">
+  <div class="logo">Horizon Labs</div>
+  <div class="nav-links">
+    <span>Home</span>
+    <span>Labs</span>
+    <span>Simulator</span>
+    <span>Contact</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="panel">
+    <h3>Controls</h3>
+
+    <button onclick="mode='node'">Add Node</button>
+    <button onclick="mode='edge'">Add Edge</button>
+    <button onclick="mode='remove'">Remove</button>
+    <button onclick="undo()">Undo</button>
+
+    <button onclick="run()">Run Algorithm</button>
+    <button onclick="resetAll()">Reset</button>
+
+    <select id="start"></select>
+
+    <select id="type">
+      <option value="undirected">Undirected</option>
+      <option value="directed">Directed</option>
+    </select>
+
+    <select id="viewMode"></select>
+
+    <input type="range" id="speed" min="100" max="1200" value="600">
+  </div>
+
+  <div class="workspace">
+    <canvas id="canvas" width="900" height="450"></canvas>
+    <div id="table"></div>
+    <div id="sequence"></div>
+  </div>
+
+</div>
+<canvas id="canvas" width="900" height="450"></canvas>
+
+<div id="table"></div>
+<div id="sequence"></div>
+
+<script>
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+let nodes=[], edges=[], history=[];
+let mode="node", selected=null;
+let dist=[], prev=[], visited=[], pathEdges=[];
+let lastRun=false, viewMode="tree";
+let visitOrder=[];
+
+const letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+// ===== DRAW =====
+function draw(){
+  ctx.clearRect(0,0,900,450);
+
+  edges.forEach(e=>{
+    let a=nodes[e.from], b=nodes[e.to];
+
+    let isPath = pathEdges.some(p =>
+      (p.from===e.from && p.to===e.to) ||
+      (p.from===e.to && p.to===e.from)
+    );
+
+    ctx.beginPath();
+    ctx.moveTo(a.x,a.y);
+    ctx.lineTo(b.x,b.y);
+    ctx.strokeStyle = isPath ? "#22c55e" : "#334155"; // green path, dark gray edges
+ctx.lineWidth = isPath ? 4 : 2;
+    ctx.stroke();
+
+    let midX = (a.x + b.x) / 2;
+let midY = (a.y + b.y) / 2;
+
+// Background circle for visibility
+ctx.beginPath();
+ctx.arc(midX, midY, 12, 0, Math.PI * 2);
+ctx.fillStyle = "#ffffff"; // white background
+ctx.fill();
+ctx.strokeStyle = "#2563eb"; // border
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// Weight text
+ctx.fillStyle = "#1e293b"; // dark text
+ctx.font = "bold 12px Segoe UI";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText(e.weight, midX, midY); });
+
+  nodes.forEach((n,i)=>{
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,18,0,Math.PI*2);
+    ctx.fillStyle=visited[i]?"green":"#38bdf8";
+    ctx.fill();
+
+    ctx.fillStyle = "#ffff"; // white text
+ctx.font = "bold 14px Segoe UI";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText(letters[i], n.x, n.y);
+
+    if(dist[i]!==undefined){
+      ctx.fillStyle = "#2563eb"; // deeper blue; // strong dark
+ctx.font = "bold 14px Segoe UI";
+      ctx.fillText(dist[i]===Infinity?"∞":dist[i],n.x-10,n.y-25);
+    }
+  });
+}
+
+// ===== CLICK =====
+canvas.onclick = e=>{
+  let r=canvas.getBoundingClientRect();
+  let x=e.clientX-r.left, y=e.clientY-r.top;
+  let i=getNode(x,y);
+
+  if(lastRun && viewMode==="single" && i!==null){
+    highlightPathTo(i);
+    draw();
+    return;
+  }
+
+  if(mode==="node"){
+    nodes.push({x,y});
+    history.push("node");
+    updateDropdown();
+  }
+
+  else if(mode==="edge"){
+    if(i!==null){
+      if(selected===null) selected=i;
+      else{
+        let w=parseInt(prompt("Weight"));
+        if(!isNaN(w)){
+          edges.push({from:selected,to:i,weight:w});
+          history.push("edge");
+        }
+        selected=null;
+      }
+    }
+  }
+
+  else if(mode==="remove"){
+    if(i!==null){
+      nodes.splice(i,1);
+      edges=edges.filter(e=>e.from!==i && e.to!==i);
+      updateDropdown();
+    }
+  }
+
+  draw();
+};
+
+// ===== HELPERS =====
+function getNode(x,y){
+  for(let i=0;i<nodes.length;i++){
+    let dx=nodes[i].x-x, dy=nodes[i].y-y;
+    if(Math.sqrt(dx*dx+dy*dy)<18) return i;
+  }
+  return null;
+}
+
+function updateDropdown(){
+  let s=document.getElementById("start");
+  s.innerHTML="";
+  nodes.forEach((_,i)=>{
+    let o=document.createElement("option");
+    o.value=i;
+    o.text=letters[i];
+    s.appendChild(o);
+  });
+}
+
+// ===== DIJKSTRA =====
+async function run(){
+  let start=parseInt(document.getElementById("start").value);
+  let type=document.getElementById("type").value;
+  let speed=document.getElementById("speed").value;
+
+  dist=Array(nodes.length).fill(Infinity);
+  prev=Array(nodes.length).fill(null);
+  visited=Array(nodes.length).fill(false);
+  pathEdges=[];
+  visitOrder=[];
+  lastRun=false;
+
+  dist[start]=0;
+
+  let steps=[];
+
+  for(let i=0;i<nodes.length;i++){
+    let u=-1;
+    for(let j=0;j<nodes.length;j++){
+      if(!visited[j] && (u===-1 || dist[j]<dist[u])) u=j;
+    }
+    if(u===-1) break;
+
+    visited[u]=true;
+    visitOrder.push(u);
+
+    edges.forEach(e=>{
+      if(e.from===u && dist[u]+e.weight < dist[e.to]){
+        dist[e.to]=dist[u]+e.weight;
+        prev[e.to]=u;
+      }
+
+      if(type==="undirected" && e.to===u && dist[u]+e.weight < dist[e.from]){
+        dist[e.from]=dist[u]+e.weight;
+        prev[e.from]=u;
+      }
+    });
+
+    steps.push({ dist:[...dist], selected:u });
+
+    draw();
+    await new Promise(r=>setTimeout(r,speed));
+  }
+
+  if(viewMode==="tree") buildTree();
+  if(viewMode==="all"){ buildTree(); showAllPaths(); }
+  if(viewMode==="single") pathEdges=[];
+
+  generateTable(steps);
+  showVisitSequence();
+
+  draw();
+  lastRun=true;
+}
+
+// ===== TREE =====
+function buildTree(){
+  pathEdges=[];
+  for(let i=0;i<nodes.length;i++){
+    if(prev[i]!==null){
+      pathEdges.push({from:prev[i],to:i});
+    }
+  }
+}
+
+// ===== SINGLE PATH =====
+function highlightPathTo(target){
+  pathEdges=[];
+  while(prev[target]!==null){
+    pathEdges.push({from:prev[target],to:target});
+    target=prev[target];
+  }
+}
+
+// ===== ALL PATHS =====
+function showAllPaths(){
+  let html="<b>Shortest Paths:</b><br><br>";
+  for(let i=0;i<nodes.length;i++){
+    if(dist[i]===Infinity){
+      html+=`${letters[i]} : No path<br>`;
+      continue;
+    }
+    let path=[], t=i;
+    while(t!==null){ path.push(letters[t]); t=prev[t]; }
+    html+=`${letters[i]} : ${path.reverse().join(" → ")} (Cost: ${dist[i]})<br>`;
+  }
+  document.getElementById("sequence").innerHTML=html;
+}
+
+// ===== VISIT SEQUENCE =====
+function showVisitSequence(){
+  let html="<b>Visit Sequence:</b><br><br>";
+
+  let steps = visitOrder.map((_,i)=>
+    visitOrder.slice(0,i+1).map(v=>letters[v]).join("")
+  );
+
+  html += steps.join("<br>");
+  document.getElementById("sequence").innerHTML += "<br><br>" + html;
+}
+
+// ===== TABLE =====
+function generateTable(steps){
+  let html="<table><tr><th>Step</th>";
+  for(let i=0;i<nodes.length;i++){
+    html+=`<th>${letters[i]}</th>`;
+  }
+  html+="</tr>";
+
+  steps.forEach((step,i)=>{
+    html+=`<tr><td>${i+1}</td>`;
+
+    step.dist.forEach((v,j)=>{
+      let val = v===Infinity ? "∞" : v;
+      if(j===step.selected){
+        html+=`<td><span class="circle">${val}</span></td>`;
+      } else {
+        html+=`<td>${val}</td>`;
+      }
+    });
+
+    html+="</tr>";
+  });
+
+  html+="</table>";
+  document.getElementById("table").innerHTML=html;
+}
+
+// ===== VIEW MODE =====
+document.getElementById("viewMode").onchange=function(){
+  viewMode=this.value;
+
+  if(viewMode==="tree"){
+    buildTree();
+    document.getElementById("sequence").innerHTML="";
+  }
+
+  if(viewMode==="all"){
+    buildTree();
+    showAllPaths();
+  }
+
+  if(viewMode==="single"){
+    pathEdges=[];
+    document.getElementById("sequence").innerHTML="Click a node";
+  }
+
+  draw();
+};
+
+// ===== OTHER =====
+function undo(){
+  let last=history.pop();
+  if(last==="node") nodes.pop();
+  else edges.pop();
+  updateDropdown();
+  draw();
+}
+
+function resetAll(){
+  nodes=[]; edges=[];
+  dist=[]; prev=[]; visited=[]; pathEdges=[];
+  visitOrder=[];
+  lastRun=false;
+  document.getElementById("table").innerHTML="";
+  document.getElementById("sequence").innerHTML="";
+  updateDropdown();
+  draw();
+}
+
+draw();
+</script>
+
+</body>
+</html>
