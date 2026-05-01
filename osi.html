@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSI Model Virtual Lab - Final Advanced</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --primary:#6d28d9;
+      --secondary:#0ea5e9;
+      --accent:#16a34a;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#dbe4f0;
+      --shadow:0 8px 24px rgba(15,23,42,0.08);
+      --danger:#dc2626;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(135deg,#eef4ff,#f8fbff,#ffffff);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    .dashboard{
+      display:grid;
+      grid-template-columns:250px 1fr;
+      min-height:100vh;
+    }
+
+    .sidebar{
+      background:#ffffff;
+      border-right:1px solid var(--border);
+      padding:28px 20px;
+      position:sticky;
+      top:0;
+      height:100vh;
+    }
+
+    .logo{
+      font-family:'Orbitron',sans-serif;
+      font-size:1.5rem;
+      font-weight:700;
+      color:var(--primary);
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .nav a{
+      text-decoration:none;
+      color:var(--muted);
+      padding:14px 16px;
+      border-radius:12px;
+      transition:0.3s;
+      font-weight:500;
+    }
+
+    .nav a:hover,
+    .nav a.active{
+      background:linear-gradient(90deg,#ede9fe,#e0f2fe);
+      color:var(--primary);
+    }
+
+    .main{
+      padding:32px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#ede9fe,#e0f2fe);
+      border-radius:24px;
+      padding:40px;
+      box-shadow:var(--shadow);
+      margin-bottom:28px;
+    }
+
+    .hero h1{
+      font-family:'Orbitron',sans-serif;
+      font-size:2.5rem;
+      color:var(--primary);
+      margin-bottom:14px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      max-width:850px;
+      line-height:1.8;
+    }
+
+    .section-title{
+      margin:24px 0 18px;
+      font-size:1.5rem;
+      font-weight:600;
+    }
+
+    .layer-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:18px;
+      margin-bottom:30px;
+    }
+
+    .layer-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      transition:0.3s;
+    }
+
+    .layer-card:hover{
+      transform:translateY(-6px);
+      border-color:var(--secondary);
+    }
+
+    .layer-number{
+      color:var(--secondary);
+      font-weight:600;
+      margin-bottom:8px;
+    }
+
+    .layer-card h3{
+      margin-bottom:8px;
+    }
+
+    .layer-card p{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:0.94rem;
+      margin-bottom:12px;
+    }
+
+    .layer-card label{
+      font-weight:600;
+      color:var(--primary);
+    }
+
+    .simulator{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:30px;
+    }
+
+    .input-group{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .input-group input{
+      flex:1;
+      min-width:240px;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      outline:none;
+      font-size:1rem;
+    }
+
+    .input-group button{
+      padding:14px 24px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      color:white;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .dual-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:20px;
+    }
+
+    .output{
+      background:#f8fafc;
+      border:1px solid var(--border);
+      padding:18px;
+      border-radius:16px;
+      min-height:340px;
+      white-space:pre-line;
+      line-height:1.8;
+      overflow:auto;
+    }
+
+    .quiz{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .quiz-options{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .quiz-options button{
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:white;
+      cursor:pointer;
+      text-align:left;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:30px;
+      color:var(--muted);
+    }
+
+    .popup-overlay{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.45);
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+    }
+
+    .popup-box{
+      background:rgba(255,255,255,0.15);
+      backdrop-filter:blur(14px);
+      padding:30px;
+      border-radius:24px;
+      text-align:center;
+      box-shadow:0 8px 30px rgba(0,0,0,0.25);
+      max-width:420px;
+      width:90%;
+    }
+
+    .popup-image{
+      width:220px;
+      max-width:100%;
+      margin-bottom:18px;
+    }
+
+    .wrong-text{
+      color:var(--danger);
+      font-size:2rem;
+      margin-bottom:16px;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .correct-text{
+      color:var(--accent);
+      font-size:2rem;
+      margin-bottom:16px;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .popup-box button{
+      padding:12px 24px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      color:white;
+      cursor:pointer;
+    }
+
+    @media(max-width:1000px){
+      .dashboard{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:relative;
+        height:auto;
+      }
+
+      .dual-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <aside class="sidebar">
+    <div class="logo"> HORIZON LABS </div>
+    <nav class="nav">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#layers">OSI Layers</a>
+      <a href="#transmission">Sender → Receiver</a>
+      <a href="#quiz">Quiz Arena</a>
+       <a href="index.html">Quit</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <section class="hero">
+      <h1>Interactive OSI Model Virtual Lab</h1>
+      <p>
+        Learn networking practically through sender-to-receiver simulation,
+        encapsulation, decapsulation, and interactive quizzes.
+      </p>
+    </section>
+
+    <h2 class="section-title" id="layers">OSI Layers Overview</h2>
+
+    <section class="layer-grid">
+      <div class="layer-card"><div class="layer-number">Layer 7</div><h3>Application</h3><p>HTTP, FTP, DNS</p><label><input type="checkbox" id="layer7" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 6</div><h3>Presentation</h3><p>Encryption, Formatting</p><label><input type="checkbox" id="layer6" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 5</div><h3>Session</h3><p>Session Management</p><label><input type="checkbox" id="layer5" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 4</div><h3>Transport</h3><p>TCP/UDP</p><label><input type="checkbox" id="layer4" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 3</div><h3>Network</h3><p>IP Routing</p><label><input type="checkbox" id="layer3" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 2</div><h3>Data Link</h3><p>MAC Framing</p><label><input type="checkbox" id="layer2" checked> Enable</label></div>
+      <div class="layer-card"><div class="layer-number">Layer 1</div><h3>Physical</h3><p>Binary Transmission</p><label><input type="checkbox" id="layer1" checked> Enable</label></div>
+    </section>
+
+    <section class="simulator" id="transmission">
+      <h2 class="section-title">Sender → Receiver Transmission Lab</h2>
+
+      <div class="input-group">
+        <input type="text" id="senderInput" placeholder="Sender enters message...">
+        <button onclick="sendData()">Transmit Data</button>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="receiverDisplay" placeholder="Receiver gets final message..." readonly>
+      </div>
+
+      <div class="dual-grid">
+        <div class="output" id="senderOutput">Sender side encapsulation will appear here...</div>
+        <div class="output" id="receiverOutput">Receiver side decapsulation will appear here...</div>
+      </div>
+    </section>
+
+    <section class="quiz" id="quiz">
+      <h2 class="section-title">Quiz Arena</h2>
+      <h3>Which layer handles encryption and formatting?</h3>
+
+      <div class="quiz-options">
+        <button onclick="checkAnswer('wrong')">Application Layer</button>
+        <button onclick="checkAnswer('correct')">Presentation Layer</button>
+        <button onclick="checkAnswer('wrong')">Transport Layer</button>
+        <button onclick="checkAnswer('wrong')">Physical Layer</button>
+      </div>
+    </section>
+
+   <!-- FIXED FOOTER (replace your current footer code with this) -->
+<footer style="background:#333; color:#fff; text-align:center; padding:15px; margin-top:30px; border-radius:14px;">
+  <p>© 2026 MADE WITH ❤️ BY HORIZON LABS | All Rights Reserved</p>
+</footer>
+
+  </main>
+</div>
+
+<!-- Wrong Popup -->
+<div id="wrongPopup" class="popup-overlay">
+  <div class="popup-box">
+    <img src="wrong-answer.png" alt="Wrong Answer" class="popup-image">
+    <h2 class="wrong-text">Wrong Answer</h2>
+    <button onclick="closeWrongPopup()">Try Again</button>
+  </div>
+</div>
+
+<!-- Correct Popup -->
+<div id="correctPopup" class="popup-overlay">
+  <div class="popup-box">
+    <img src="correct-answer.png" alt="Correct Answer" class="popup-image">
+    <h2 class="correct-text">Correct Answer</h2>
+    <button onclick="closeCorrectPopup()">Continue</button>
+  </div>
+</div>
+
+<!-- Error Popup -->
+<div id="errorPopup" class="popup-overlay">
+  <div class="popup-box">
+    <img src="error-answer.png" alt="Layer Error" class="popup-image">
+    <h2 class="wrong-text">Transmission Failed</h2>
+    <p id="errorReason" style="color:white; margin-bottom:18px; font-size:1rem;"></p>
+    <button onclick="closeErrorPopup()">Fix Layer</button>
+  </div>
+</div>
+
+<script>
+function sendData(){
+  const message = document.getElementById("senderInput").value.trim();
+  const senderOutput = document.getElementById("senderOutput");
+  const receiverOutput = document.getElementById("receiverOutput");
+  const receiverDisplay = document.getElementById("receiverDisplay");
+
+  if(message === ""){
+    senderOutput.innerText = "Please enter data from sender side.";
+    receiverOutput.innerText = "Waiting for transmission...";
+    receiverDisplay.value = "";
+    return;
+  }
+
+  const layers = [
+    {id:"layer7", name:"Application Layer", reason:"User interface protocols unavailable."},
+    {id:"layer6", name:"Presentation Layer", reason:"Encryption/Formatting failed."},
+    {id:"layer5", name:"Session Layer", reason:"Session could not be established."},
+    {id:"layer4", name:"Transport Layer", reason:"Data segmentation failed."},
+    {id:"layer3", name:"Network Layer", reason:"IP routing unavailable."},
+    {id:"layer2", name:"Data Link Layer", reason:"MAC framing failed."},
+    {id:"layer1", name:"Physical Layer", reason:"Binary transmission impossible."}
+  ];
+
+  for(let layer of layers){
+    if(!document.getElementById(layer.id).checked){
+      showErrorPopup(`${layer.name} is disabled. ${layer.reason}`);
+      senderOutput.innerText = "Transmission Failed.";
+      receiverOutput.innerText = "Receiver did not get data.";
+      receiverDisplay.value = "";
+      return;
+    }
+  }
+
+  let binary = "";
+  for(let i = 0; i < message.length; i++){
+    binary += message.charCodeAt(i).toString(2) + " ";
+  }
+
+  senderOutput.innerText =
+`SENDER SIDE (ENCAPSULATION)
+
+Layer 7 - Application:
+Message Created → ${message}
+
+Layer 6 - Presentation:
+Encrypts & Formats
+
+Layer 5 - Session:
+Session Established
+
+Layer 4 - Transport:
+Segments Data
+
+Layer 3 - Network:
+Adds IP
+
+Layer 2 - Data Link:
+Adds MAC
+
+Layer 1 - Physical:
+Binary Sent →
+${binary}`;
+
+  receiverOutput.innerText =
+`RECEIVER SIDE (DECAPSULATION)
+
+Layer 1 - Physical:
+Binary Received
+
+Layer 2 - Data Link:
+MAC Removed
+
+Layer 3 - Network:
+IP Verified
+
+Layer 4 - Transport:
+Segments Reassembled
+
+Layer 5 - Session:
+Session Maintained
+
+Layer 6 - Presentation:
+Decrypts
+
+Layer 7 - Application:
+Original Message →
+${message}`;
+
+  receiverDisplay.value = message;
+}
+
+function checkAnswer(answer){
+  if(answer === "correct"){
+    document.getElementById("correctPopup").style.display = "flex";
+  } else {
+    document.getElementById("wrongPopup").style.display = "flex";
+  }
+}
+
+function closeWrongPopup(){
+  document.getElementById("wrongPopup").style.display = "none";
+}
+
+function closeCorrectPopup(){
+  document.getElementById("correctPopup").style.display = "none";
+}
+
+function showErrorPopup(reason){
+  document.getElementById("errorReason").innerText = reason;
+  document.getElementById("errorPopup").style.display = "flex";
+}
+
+function closeErrorPopup(){
+  document.getElementById("errorPopup").style.display = "none";
+}
+</script>
+
+</body>
+</html>
