@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dijkstra Ultimate Tool</title>
+  <title>Dijkstra Simulator</title>
   <style>
-    <style>
+ 
 *{
   margin:0;
   padding:0;
@@ -11,11 +11,28 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-body{
-  background:#f1f5f9;
-  color:#1e293b;
+body::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:url("bg.jpg") no-repeat center center fixed;
+  background-size:cover;
+  opacity:0.9;
+  z-index:-1;
 }
-
+html,body{
+  height: 100%;
+}
+ body{
+  display: flex;
+  flex-direction: column;
+ }
+ .container{
+  flex: 1;
+ }
 /* NAVBAR */
 .navbar{
   display:flex;
@@ -95,7 +112,13 @@ select, input{
   border-radius:14px;
   padding:15px;
   box-shadow:0 4px 20px rgba(0,0,0,0.05);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
+
 
 canvas{
   background:#f8fafc;
@@ -132,20 +155,29 @@ tr{
   color:#2563eb;
   font-size:14px;
 }
+
+.workspace-title{
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 10px;
+      padding-left: 5px;
+
+}
 </style>
-  </style>
+ 
 </head>
 <body>
 
-<h2>Dijkstra Visualizer (Ultimate Final)</h2>
+
 <div class="navbar">
   <div class="logo">Horizon Labs</div>
   <div class="nav-links">
-    <span>Home</span>
-    <span>Labs</span>
-    <span>Simulator</span>
-    <span>Contact</span>
+    <h2>Dijkstra Simulator</h2>
   </div>
+  <span> <a href="index.html" > Home</a><span>
 </div>
 
 <div class="container">
@@ -168,22 +200,26 @@ tr{
       <option value="directed">Directed</option>
     </select>
 
-    <select id="viewMode"></select>
+    <select id="viewMode">
+  <option value="tree">Shortest Path Tree</option>
+  <option value="all">All Paths</option>
+  <option value="single">Single Path</option>
+</select>
 
     <input type="range" id="speed" min="100" max="1200" value="600">
   </div>
 
   <div class="workspace">
+    <h3 class="workspace-title">GRAPH VISUALIZATION</h3>
     <canvas id="canvas" width="900" height="450"></canvas>
     <div id="table"></div>
     <div id="sequence"></div>
   </div>
 
 </div>
-<canvas id="canvas" width="900" height="450"></canvas>
 
-<div id="table"></div>
-<div id="sequence"></div>
+
+
 
 <script>
 let canvas = document.getElementById("canvas");
@@ -491,6 +527,8 @@ function resetAll(){
 
 draw();
 </script>
-
+<footer style="background:#333; color:#fff; text-align:center; padding:15px;">
+  <p>© 2026 MADE WITH ❤️ BY HORIZON LABS | All Rights Reserved</p>
+</footer>
 </body>
 </html>

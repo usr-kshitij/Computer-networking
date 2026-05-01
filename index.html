@@ -13,10 +13,18 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    body {
-      background: #f8fafc;
-      color: #0f172a;
-    }
+body::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:url("bg.jpg") no-repeat center center fixed;
+  background-size:cover;
+  opacity:0.5;
+  z-index:-1;
+}
 
     /* NAVBAR */
     .navbar {
@@ -164,10 +172,10 @@
   <div class="navbar">
     <div class="logo">Horizon Labs</div>
     <div class="nav-links">
-      <a href="#">Home</a>
+     <!--<a href="#">Home</a>
       <a href="#">Labs</a>
       <a href="#">Simulator</a>
-      <a href="#">Contact</a>
+      <a href="#">Contact</a> -->
     </div>
   </div>
 
@@ -176,7 +184,7 @@
     <h1>Computer Networking Virtual Lab</h1>
     <p>Learn, Simulate, and Master Networking Concepts in Real-Time</p>
 
-    <a href="dijkstra.html">Launch Dijkstra Simulator</a>
+    <!--<a href="dijkstra.html">Launch Dijkstra Simulator</a>-->
   </section>
 
   <!-- FEATURES -->
@@ -207,8 +215,8 @@
     <h2>Available Labs</h2>
 
     <div class="lab-list">
-      <a class="lab-btn" href="#">OSI Model Simulator</a>
       <a class="lab-btn" href="dijkstra.html">Dijkstra Algorithm</a>
+      <a class="lab-btn" href="#">OSI Model Simulator</a>
       <a class="lab-btn" href="#">Subnet Calculator</a>
       <a class="lab-btn" href="#">Routing Simulator</a>
       <a class="lab-btn" href="#">Packet Flow Visualizer</a>
